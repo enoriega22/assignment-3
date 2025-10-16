@@ -7,6 +7,7 @@
   let replierInput = null; // { frameSet, contextCount, agent, reasons }
   let isLoading = false;
   let errorMsg = '';
+  let mode = 'router'; // 'router' | 'synth'
   
 
   onMount(() => {});
@@ -21,7 +22,7 @@
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ history: messages })
+      body: JSON.stringify({ history: messages, mode })
     });
     const data = await res.json();
     if (!res.ok || data?.error) {
@@ -129,6 +130,13 @@
   <div class="subtle">Conversational demo</div>
   <div class="toolbar" style="margin: 0.5rem 0 0.75rem 0;">
     <button class="secondary" on:click={() => (debugOpen = !debugOpen)}>{debugOpen ? 'Hide' : 'Show'} Debug</button>
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <label for="mode" class="subtle" style="margin: 0;">Orchestrator</label>
+      <select id="mode" bind:value={mode} style="padding: 0.4rem 0.5rem; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text);">
+        <option value="router">Router</option>
+        <option value="synth">Synthesizer</option>
+      </select>
+    </div>
   </div>
 
   {#if errorMsg}
@@ -181,6 +189,7 @@
             <div><strong>{name}</strong>: {p?.value}</div>
           {/each}
         </div>
+      <div style="margin-top: 0.35rem;"><strong>Selected Mode:</strong> {mode}</div>
       </div>
     {/if}
   </div>

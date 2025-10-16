@@ -16,8 +16,8 @@ export class ExampleOrchestrator {
     this.exampleAgent = new ExampleAgent();
   }
 
-  async respondWithAgent(userMessage, context) {
-    const res = await this.exampleAgent.respond(userMessage, context);
+  async respondWithAgent(contents) {
+    const res = await this.exampleAgent.respond(contents);
     return res?.text || '';
   }
 
@@ -47,7 +47,7 @@ export class ExampleOrchestrator {
       if (parsed?.reasons) reasons = String(parsed.reasons);
     } catch (_) {}
 
-    const text = await this.respondWithAgent(agent, userMessage, context);
+    const text = await this.respondWithAgent(contents);
 
     const frameSet = { frames: { persona: { value: agent, rationale: [reasons] } } };
     return { assistantMessage: text || '', frameSet, agent, reasons };
